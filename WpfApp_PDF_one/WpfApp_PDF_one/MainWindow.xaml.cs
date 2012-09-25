@@ -78,21 +78,24 @@ namespace WpfApp_PDF_one
                 // Initialize the PDF document
                 doc = new Document();
                 iTextSharp.text.pdf.PdfWriter writer = iTextSharp.text.pdf.PdfWriter.GetInstance(doc,
-                    new System.IO.FileStream(System.IO.Directory.GetCurrentDirectory() + "\\ScienceReport.pdf",
+                    new System.IO.FileStream(System.IO.Directory.GetCurrentDirectory() + "\\test_newthread.pdf",
                         System.IO.FileMode.Create));
 
                 // Set margins and page size for the document
-                doc.SetMargins(50, 50, 50, 50);
+                doc.SetMargins(0, 0, 0, 0);
                 // There are a huge number of possible page sizes, including such sizes as
                 // EXECUTIVE, POSTCARD, LEDGER, LEGAL, LETTER_LANDSCAPE, and NOTE
-                doc.SetPageSize(new iTextSharp.text.Rectangle(iTextSharp.text.PageSize.LETTER.Width,
-                    iTextSharp.text.PageSize.LETTER.Height));
+
+                // A4_landscape NON funziona... e' necessario usare il metodo Rotate() ... BOH!!
+                //doc.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
+                doc.SetPageSize(new iTextSharp.text.Rectangle(802, 595));
+                //doc.SetPageSize(iTextSharp.text.Rectangle.(802, 595));
 
                 // Add metadata to the document.  This information is visible when viewing the 
                 // document properities within Adobe Reader.
-                doc.AddTitle("My Science Report");
-                doc.AddCreator("M. Lichtenberg");
-                doc.AddKeywords("paper airplanes");
+                doc.AddTitle("AERRE pdf demo");
+                doc.AddCreator("iText");
+                doc.AddKeywords("keywords");
 
                 // Add Xmp metadata to the document.
                 this.CreateXmpMetadata(writer);
@@ -101,20 +104,22 @@ namespace WpfApp_PDF_one
                 doc.Open();
 
                 // Add pages to the document
-                this.AddPageWithBasicFormatting(doc);
-                this.AddPageWithInternalLinks(doc);
-                this.AddPageWithBulletList(doc);
-                this.AddPageWithExternalLinks(doc);
-                this.AddPageWithImage(doc, System.IO.Directory.GetCurrentDirectory() + "\\FinalGraph.jpg");
+
+                this.AddPageWithBackgroundSX(doc);
+
+                //this.AddPageWithInternalLinks(doc);
+                //this.AddPageWithBulletList(doc);
+                //this.AddPageWithExternalLinks(doc);
+                //this.AddPageWithImage(doc, System.IO.Directory.GetCurrentDirectory() + "\\FinalGraph.jpg");
 
                 // Add page labels to the document
-                iTextSharp.text.pdf.PdfPageLabels pdfPageLabels = new iTextSharp.text.pdf.PdfPageLabels();
-                pdfPageLabels.AddPageLabel(1, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "Basic Formatting");
-                pdfPageLabels.AddPageLabel(2, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "Internal Links");
-                pdfPageLabels.AddPageLabel(3, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "Bullet List");
-                pdfPageLabels.AddPageLabel(4, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "External Links");
-                pdfPageLabels.AddPageLabel(5, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "Image");
-                writer.PageLabels = pdfPageLabels;
+                //iTextSharp.text.pdf.PdfPageLabels pdfPageLabels = new iTextSharp.text.pdf.PdfPageLabels();
+                //pdfPageLabels.AddPageLabel(1, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "Basic Formatting");
+                //pdfPageLabels.AddPageLabel(2, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "Internal Links");
+                //pdfPageLabels.AddPageLabel(3, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "Bullet List");
+                //pdfPageLabels.AddPageLabel(4, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "External Links");
+                //pdfPageLabels.AddPageLabel(5, iTextSharp.text.pdf.PdfPageLabels.EMPTY, "Image");
+                //writer.PageLabels = pdfPageLabels;
             }
             catch (iTextSharp.text.DocumentException dex)
             {
@@ -128,12 +133,111 @@ namespace WpfApp_PDF_one
             }
         }
 
+
+        private void AddPageWithBackgroundSX(iTextSharp.text.Document doc)
+        {
+          
+            // Add a logo
+            String appPath = System.IO.Directory.GetCurrentDirectory();
+            //iTextSharp.text.Image bg_sx = iTextSharp.text.Image.GetInstance(appPath + "\\sfondi\\pag12_72dpi.jpg");
+            iTextSharp.text.Image bg_sx = iTextSharp.text.Image.GetInstance(appPath + "\\sfondi\\pag12.jpg");
+            //bg_sx.ScaleToFit(doc.PageSize.Width, doc.PageSize.Height);
+            bg_sx.ScaleToFit(802, 595);
+            bg_sx.Alignment = iTextSharp.text.Image.UNDERLYING;
+            doc.Add(bg_sx);
+            bg_sx = null;
+
+            // Write page content.  Note the use of fonts and alignment attributes.
+            //this.AddParagraph(doc, iTextSharp.text.Element.ALIGN_CENTER, _largeFont, new Chunk("\n\nMY SCIENCE PROJECT\n\n"));
+            //this.AddParagraph(doc, iTextSharp.text.Element.ALIGN_CENTER, _standardFont, new Chunk("by M. Lichtenberg\n\n\n\n"));
+
+            // Write additional page content
+            //this.AddParagraph(doc, iTextSharp.text.Element.ALIGN_CENTER, _largeFont, new Chunk("\n\n\nWhat kind of paper is the best for making paper airplanes?\n\n\n\n\n"));
+            //this.AddParagraph(doc, iTextSharp.text.Element.ALIGN_CENTER, _smallFont, new Chunk("Generated " +
+            //    DateTime.Now.Day.ToString() + " " +
+            //    System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(DateTime.Now.Month) + " " +
+            //    DateTime.Now.Year.ToString() + " " +
+            //    DateTime.Now.ToShortTimeString()));
+
+
+
+            //PdfPTable table = new PdfPTable(3);
+            //table.WidthPercentage = 100;
+            //table.AddCell("Cell 1");
+            //PdfPCell cell = new PdfPCell(new Phrase("Cell 2", new Font(Font.FontFamily.HELVETICA, 8f, Font.NORMAL)));
+            //cell.BorderWidthBottom = 3f;
+            //cell.BorderWidthTop = 3f;
+            //cell.PaddingBottom = 10f;
+            //cell.PaddingLeft = 20f;
+            //cell.PaddingTop = 4f;
+            //table.AddCell(cell);
+            //table.AddCell("Cell 3");
+            //doc.Add(table);
+
+
+
+            iTextSharp.text.Paragraph paragraphTable1 = new iTextSharp.text.Paragraph();
+            paragraphTable1.SpacingBefore = 100f;
+            paragraphTable1.SpacingAfter = 15f;
+            //paragraphTable1.Font.Color = new BaseColor(255, 255, 255);
+         
+
+            PdfPTable table = new PdfPTable(7);
+            table.TotalWidth = 792f;
+            table.LockedWidth = true;
+           
+
+
+
+
+            float[] colWidths = { 105, 87, 85, 67, 67, 228, 73 };
+            table.SetWidths(colWidths);
+            //table.DefaultCell.Padding = 3;
+            table.DefaultCell.BorderWidth=8;
+            table.DefaultCell.HorizontalAlignment = 1;
+            table.DefaultCell.VerticalAlignment = 1;
+            table.DefaultCell.BackgroundColor = new BaseColor(0, 159, 238);
+            table.DefaultCell.BorderColor = new BaseColor(255, 255, 255);
+            table.DefaultCell.MinimumHeight = 35f;
+
+            //table.DefaultCell.Border = (PdfPCell.BOTTOM_BORDER);
+            //table.DefaultCell.BorderColor = New iTextSharp.text.Color(255, 255, 255);
+            //table.DefaultCell.BorderColorBottom = New iTextSharp.text.Color(255, 255,255); 
+
+            //PdfPCell cell = new PdfPCell(new Phrase("This is table 1"));
+            //cell.Colspan = 7;
+            //cell.HorizontalAlignment = 1;
+            //table.AddCell(cell);
+
+            table.AddCell("Nome Commerciale");
+            table.AddCell("INCI USA");
+            table.AddCell("INCI EU");
+            table.AddCell("CAS");
+            table.AddCell("EINECS");
+            table.AddCell("Descrizione funzione");
+            table.AddCell("Categorie di utilizzo");
+            //table.AddCell("Col 1 Row 2");
+            //table.AddCell("Col 2 Row 2");
+            //table.AddCell("Col 3 Row 2");
+            paragraphTable1.Add(table);
+            doc.Add(paragraphTable1);
+
+
+
+
+
+
+        }
+
+
         /// <summary>
         /// Add the header page to the document.  This shows an example of a page containing
         /// both text and images.  The contents of the page are centered and the text is of
         /// various sizes.
         /// </summary>
         /// <param name="doc"></param>
+        /// 
+
         private void AddPageWithBasicFormatting(iTextSharp.text.Document doc)
         {
             // Write page content.  Note the use of fonts and alignment attributes.
