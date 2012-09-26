@@ -63,9 +63,11 @@ namespace WpfApp_PDF_one
 
 
         // Set up the fonts to be used on the pages 
-        private Font _largeFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD, BaseColor.BLACK);
+        private Font _largeFont = new Font(Font.FontFamily.HELVETICA, 36, Font.BOLD, BaseColor.RED);
         private Font _standardFont = new Font(Font.FontFamily.HELVETICA, 14, Font.NORMAL, BaseColor.BLACK);
         private Font _smallFont = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
+
+
 
 
 
@@ -88,6 +90,7 @@ namespace WpfApp_PDF_one
 
                 // A4_landscape NON funziona... e' necessario usare il metodo Rotate() ... BOH!!
                 //doc.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
+
                 doc.SetPageSize(new iTextSharp.text.Rectangle(802, 595));
                 //doc.SetPageSize(iTextSharp.text.Rectangle.(802, 595));
 
@@ -130,6 +133,8 @@ namespace WpfApp_PDF_one
                 // Clean up
                 doc.Close();
                 doc = null;
+
+                System.Diagnostics.Process.Start("IExplore.exe", System.IO.Directory.GetCurrentDirectory() + "\\test_newthread.pdf");
             }
         }
 
@@ -174,40 +179,57 @@ namespace WpfApp_PDF_one
             //table.AddCell("Cell 3");
             //doc.Add(table);
 
+                    // Set up the fonts to be used on the pages 
+
+            BaseFont bfTimes = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, false);
+
+            Font times = new Font(bfTimes, 12, Font.ITALIC, BaseColor.RED);
+
+
+            Font pippo = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD, BaseColor.WHITE);
+
+
+            // Generate external links to be embedded in the page
+            iTextSharp.text.Anchor bibliographyAnchor1 = new Anchor("TDS", _standardFont);
+            bibliographyAnchor1.Reference = "link.pdf";
+
+            // Add the links to the page
+            //this.AddParagraph(doc, iTextSharp.text.Element.ALIGN_LEFT, _standardFont, bibliographyAnchor1);
 
 
             iTextSharp.text.Paragraph paragraphTable1 = new iTextSharp.text.Paragraph();
             paragraphTable1.SpacingBefore = 100f;
-            paragraphTable1.SpacingAfter = 15f;
-            //paragraphTable1.Font.Color = new BaseColor(255, 255, 255);
-         
+            paragraphTable1.SpacingAfter = 15f;  
 
             PdfPTable table = new PdfPTable(7);
             table.TotalWidth = 792f;
             table.LockedWidth = true;
-           
-
-
-
-
+                   
             float[] colWidths = { 105, 87, 85, 67, 67, 228, 73 };
             table.SetWidths(colWidths);
-            //table.DefaultCell.Padding = 3;
+            
+            table.DefaultCell.Phrase = new Phrase("", pippo);
             table.DefaultCell.BorderWidth=8;
             table.DefaultCell.HorizontalAlignment = 1;
             table.DefaultCell.VerticalAlignment = 1;
-            table.DefaultCell.BackgroundColor = new BaseColor(0, 159, 238);
+            table.DefaultCell.BackgroundColor = new BaseColor(219, 220, 222);
             table.DefaultCell.BorderColor = new BaseColor(255, 255, 255);
             table.DefaultCell.MinimumHeight = 35f;
-
-            //table.DefaultCell.Border = (PdfPCell.BOTTOM_BORDER);
-            //table.DefaultCell.BorderColor = New iTextSharp.text.Color(255, 255, 255);
-            //table.DefaultCell.BorderColorBottom = New iTextSharp.text.Color(255, 255,255); 
-
-            //PdfPCell cell = new PdfPCell(new Phrase("This is table 1"));
-            //cell.Colspan = 7;
-            //cell.HorizontalAlignment = 1;
-            //table.AddCell(cell);
+            
+            table.AddCell("Nome Commerciale");
+            table.AddCell("INCI USA");
+            table.AddCell("INCI EU");
+            table.AddCell("CAS");
+            table.AddCell("EINECS");
+            table.AddCell("Descrizione funzione");
+            table.AddCell("Categorie di utilizzo");
+            table.Rows[0].GetCells()[0].BackgroundColor = new BaseColor(0, 159, 238);
+            table.Rows[0].GetCells()[1].BackgroundColor = new BaseColor(0, 159, 238);
+            table.Rows[0].GetCells()[2].BackgroundColor = new BaseColor(0, 159, 238);
+            table.Rows[0].GetCells()[3].BackgroundColor = new BaseColor(0, 159, 238);
+            table.Rows[0].GetCells()[4].BackgroundColor = new BaseColor(0, 159, 238);
+            table.Rows[0].GetCells()[5].BackgroundColor = new BaseColor(0, 159, 238);
+            table.Rows[0].GetCells()[6].BackgroundColor = new BaseColor(0, 159, 238);
 
             table.AddCell("Nome Commerciale");
             table.AddCell("INCI USA");
@@ -216,11 +238,38 @@ namespace WpfApp_PDF_one
             table.AddCell("EINECS");
             table.AddCell("Descrizione funzione");
             table.AddCell("Categorie di utilizzo");
-            //table.AddCell("Col 1 Row 2");
-            //table.AddCell("Col 2 Row 2");
-            //table.AddCell("Col 3 Row 2");
+
+            Phrase ph = new Phrase();
+
+            ph.Add("testo \n");
+            ph.Add(bibliographyAnchor1);
+            Chunk ch = new Chunk();
+            ch.Font.SetStyle(1);
+            ch.Append("\n boldissssimo");
+
+            ph.Add(ch);
+
+
+            table.AddCell(ph);
+            table.AddCell("INCI USA");
+            table.AddCell("INCI EU");
+            table.AddCell("CAS");
+            table.AddCell("EINECS");
+            table.AddCell("Descrizione funzione");
+            table.AddCell("Categorie di utilizzo");
+
+ 
+
             paragraphTable1.Add(table);
             doc.Add(paragraphTable1);
+
+
+
+
+
+
+
+
 
 
 
